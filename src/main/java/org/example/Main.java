@@ -1,10 +1,8 @@
 package org.example;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import ui.NetworkMonitorUI;
 
 public class Main extends Application {
     public static void main(String[] args) {
@@ -14,21 +12,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // Create a label to display text
-        Label label = new Label("Hello, JavaFX!");
+        // Create an instance of the NetworkMonitorUI class
+        NetworkMonitorUI networkMonitorUI = new NetworkMonitorUI();
 
-        // Create a layout container (StackPane)
-        StackPane root = new StackPane();
-        root.getChildren().add(label);
-
-        // Create a scene with the layout
-        Scene scene = new Scene(root, 400, 300);
-
-        // Set the scene and title on the primary stage
-        primaryStage.setTitle("JavaFX Test");
-        primaryStage.setScene(scene);
-
-        // Show the stage
-        primaryStage.show();
+        // Initialize and start the UI
+        networkMonitorUI.start(primaryStage);
     }
 }
