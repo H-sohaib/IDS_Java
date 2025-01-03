@@ -1,4 +1,4 @@
-package ui;
+package com.ids.ui;
 
 import javafx.application.Application;
 import javafx.scene.Scene;

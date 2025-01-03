@@ -1,8 +1,6 @@
-package org.example;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
-import ui.NetworkMonitorUI;
+import com.ids.ui.NetworkMonitorUI;
 
 public class Main extends Application {
     public static void main(String[] args) {
