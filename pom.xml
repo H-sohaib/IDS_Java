@@ -15,6 +15,18 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.26</version>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>ch.qos.logback</groupId>-->
+<!--            <artifactId>logback-classic</artifactId>-->
+<!--            <version>1.4.12</version>-->
+<!--        </dependency>-->
+
 
         <dependency>
             <groupId>org.pcap4j</groupId>
@@ -27,27 +39,28 @@
             <version>1.8.2</version>
         </dependency>
 
-        <!-- JavaFX Base -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-base</artifactId>
-            <version>20.0.2</version>
-            <classifier>${javafx.platform}</classifier>
-        </dependency>
-        <!-- JavaFX Graphics -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-            <version>20.0.2</version>
-            <classifier>${javafx.platform}</classifier>
-        </dependency>
-        <!-- JavaFX Controls -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>20.0.2</version>
-            <classifier>${javafx.platform}</classifier>
-        </dependency>
+<!--        &lt;!&ndash; JavaFX Base &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.openjfx</groupId>-->
+<!--            <artifactId>javafx-base</artifactId>-->
+<!--            <version>20.0.2</version>-->
+<!--            <classifier>${javafx.platform}</classifier>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; JavaFX Graphics &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.openjfx</groupId>-->
+<!--            <artifactId>javafx-graphics</artifactId>-->
+<!--            <version>20.0.2</version>-->
+<!--            <classifier>${javafx.platform}</classifier>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; JavaFX Controls &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.openjfx</groupId>-->
+<!--            <artifactId>javafx-controls</artifactId>-->
+<!--            <version>20.0.2</version>-->
+<!--            <classifier>${javafx.platform}</classifier>-->
+<!--        </dependency>-->
+
     </dependencies>
 
     <profiles>
