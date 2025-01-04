@@ -8,19 +8,21 @@ import org.pcap4j.util.NifSelector;
 import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws IOException, NotOpenException, PcapNativeException {
+  public static void main(String[] args) throws IOException, NotOpenException, PcapNativeException {
 
-        PcapNetworkInterface niterface = new NifSelector().selectNetworkInterface();
-        System.out.println("Selected Interface : " + niterface.getDescription());
+    PcapNetworkInterface networkInterface = new NifSelector().selectNetworkInterface();
+    System.out.println("Selected Interface : " + networkInterface.getDescription());
 
-        // create a new PacketCapture object and start capturing packets
-        PacketCapture packetCapture = new PacketCapture(niterface); // no filter
-        packetCapture.startCapture("output.pcap");
+    // create a new PacketCapture object and start capturing packets
+    PacketCapture packetCapture = new PacketCapture(networkInterface); // no filter
+    ConnectionAnalyzer connectionAnalyzer = new ConnectionAnalyzer();
 
-        PacketCapture packetCapture2 = new PacketCapture(niterface , "tcp port 443" ); // no filter
-        packetCapture.startCapture("output2.pcap");
+    packetCapture.startCapture("output.pcap");
 
+    connectionAnalyzer.startAnalyzing(packetCapture, 60000, 1000); // 1 minute cleanup timeout, 1 second analysis
 
-    }
+    // Print active connections periodically with custom print interval
+    connectionAnalyzer.printActiveConnections(5000); // 5 seconds print interval
+  }
 
 }
