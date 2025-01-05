@@ -22,7 +22,10 @@ public class Main {
     connectionAnalyzer.startAnalyzing(packetCapture, 60000, 1000); // 1 minute cleanup timeout, 1 second analysis
 
     // Print active connections periodically with custom print interval
-    connectionAnalyzer.printActiveConnections(5000); // 5 seconds print interval
+    // connectionAnalyzer.printActiveConnections(5000); // 5 seconds print interval
+
+    // Print packet statistics periodically with custom print interval
+    connectionAnalyzer.printPacketStatistics(5000); // 5 seconds print interval
   }
 
 }
