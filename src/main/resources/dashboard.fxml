@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.ids.ui.DashboardController" hgap="10" vgap="10">
+    <padding>
+        <Insets top="10" right="10" bottom="10" left="10"/>
+    </padding>
+    <!-- Active Connections Section -->
+    <VBox GridPane.rowIndex="0" GridPane.columnIndex="0">
+        <Text text="Active Connections" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+        <TableView fx:id="connectionTable" prefHeight="200">
+            <columns>
+                <TableColumn fx:id="sourceIpCol" text="Source IP"/>
+                <TableColumn fx:id="destinationIpCol" text="Destination IP"/>
+                <TableColumn fx:id="sourcePortCol" text="Source Port"/>
+                <TableColumn fx:id="destinationPortCol" text="Destination Port"/>
+                <TableColumn fx:id="protocolCol" text="Protocol"/>
+                <TableColumn fx:id="packetCountCol" text="Packets"/>
+                <TableColumn fx:id="byteCountCol" text="Bytes"/>
+                <TableColumn fx:id="durationCol" text="Duration (ms)"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+    <!-- Packet Statistics Section -->
+    <VBox GridPane.rowIndex="0" GridPane.columnIndex="1">
+        <Text text="Packet Statistics" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+        <TableView fx:id="packetStatisticsTable" prefHeight="200">
+            <columns>
+                <TableColumn fx:id="statisticCol" text="Statistic" />
+                <TableColumn fx:id="valueCol" text="Value" />
+            </columns>
+        </TableView>
+    </VBox>
+
+    <!-- Alerts Section -->
+    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="2">
+        <Text text="Alerts" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+        <TableView fx:id="alertsTable" prefHeight="200">
+            <columns>
+                <TableColumn fx:id="timeCol" text="Time" />
+                <TableColumn fx:id="alertCol" text="Alert" />
+            </columns>
+        </TableView>
+    </VBox>
+</GridPane>

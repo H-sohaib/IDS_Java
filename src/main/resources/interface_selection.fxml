@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.ids.ui.InterfaceSelectionController" spacing="10" alignment="CENTER">
+    <ComboBox fx:id="interfaceComboBox" promptText="Select Network Interface"/>
+    <Button text="Start Monitoring" onAction="#launchDashboard"/>
+</VBox>

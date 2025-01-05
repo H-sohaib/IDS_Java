@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionAnalyzer {
-
+  
   private Map<String, Integer> incomingPacketsCount = new ConcurrentHashMap<>();
   private Map<String, Integer> outgoingPacketsCount = new ConcurrentHashMap<>();
   private final Map<String, Connection> activeConnections = new ConcurrentHashMap<>();

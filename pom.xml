@@ -39,6 +39,20 @@
             <version>1.8.2</version>
         </dependency>
 
+               <!-- JavaFX dependencies -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>20.0.2</version>
+            <classifier>${javafx.platform}</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>20.0.2</version>
+            <classifier>${javafx.platform}</classifier>
+        </dependency>
+
 <!--        &lt;!&ndash; JavaFX Base &ndash;&gt;-->
 <!--        <dependency>-->
 <!--            <groupId>org.openjfx</groupId>-->
@@ -62,6 +76,21 @@
 <!--        </dependency>-->
 
     </dependencies>
+  
+      <build>
+        <plugins>
+            <!-- JavaFX Maven Plugin -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>com.ids.ui.DashboardApp</mainClass>
+                </configuration>
+            </plugin>
+            <!-- Other plugins -->
+        </plugins>
+    </build>
 
     <profiles>
         <!-- Windows Profile -->
