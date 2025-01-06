@@ -9,6 +9,11 @@ Pcap4j code examples: [https://github.com/kaitoy/pcap4j/blob/v1/pcap4j-sample/sr
 2. Pcap4j requires installing [Npcap](https://npcap.com/) for Windows.
 3. Add `%SystemRoot%\System32\Npcap\` to the system environment path.
 4. Edit configuration and paste the following in VM options:
-    ```
-    -Dorg.pcap4j.core.pcapLibName=C:\Windows\System32\Npcap\wpcap.dll -Dorg.pcap4j.core.packetLibName=C:\Windows\System32\Npcap\Packet.dll -Djna.library.path=C:\Windows\System32\Npcap
-    ```
+   ```
+   -Dorg.pcap4j.core.pcapLibName=C:\Windows\System32\Npcap\wpcap.dll -Dorg.pcap4j.core.packetLibName=C:\Windows\System32\Npcap\Packet.dll -Djna.library.path=C:\Windows\System32\Npcap
+   ```
+
+## to run project
+
+- maven installed into system
+- mvn javafx:run
