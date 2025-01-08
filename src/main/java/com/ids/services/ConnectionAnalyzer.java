@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionAnalyzer {
-  
+
   private Map<String, Integer> incomingPacketsCount = new ConcurrentHashMap<>();
   private Map<String, Integer> outgoingPacketsCount = new ConcurrentHashMap<>();
   private final Map<String, Connection> activeConnections = new ConcurrentHashMap<>();
@@ -41,6 +41,16 @@ public class ConnectionAnalyzer {
   // Get all active connections
   public Collection<Connection> getActiveConnections() {
     return activeConnections.values();
+  }
+
+  // Get incoming packet count per IP address
+  public Map<String, Integer> getIncomingPacketsCount() {
+    return incomingPacketsCount;
+  }
+
+  // Get outgoing packet count per IP address
+  public Map<String, Integer> getOutgoingPacketsCount() {
+    return outgoingPacketsCount;
   }
 
   // Clean up inactive connections (optional, based on timeout or inactivity)
@@ -157,16 +167,6 @@ public class ConnectionAnalyzer {
     }
 
     return new PacketInfo(sourceIp, destinationIp, sourcePort, destinationPort, protocol, packetSize);
-  }
-
-  // Get incoming packet count per IP address
-  public Map<String, Integer> getIncomingPacketsCount() {
-    return incomingPacketsCount;
-  }
-
-  // Get outgoing packet count per IP address
-  public Map<String, Integer> getOutgoingPacketsCount() {
-    return outgoingPacketsCount;
   }
 
 }

@@ -6,12 +6,12 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.geometry.Insets?>
 
-<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.ids.ui.DashboardController" hgap="10" vgap="10">
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.ids.ui.DashboardController">
     <padding>
         <Insets top="10" right="10" bottom="10" left="10"/>
     </padding>
     <!-- Active Connections Section -->
-    <VBox GridPane.rowIndex="0" GridPane.columnIndex="0">
+    <VBox GridPane.rowIndex="0" GridPane.columnIndex="0" VBox.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
         <Text text="Active Connections" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
         <TableView fx:id="connectionTable" prefHeight="200">
             <columns>
@@ -28,23 +28,24 @@
     </VBox>
 
     <!-- Packet Statistics Section -->
-    <VBox GridPane.rowIndex="0" GridPane.columnIndex="1">
+    <VBox GridPane.rowIndex="0" GridPane.columnIndex="1" VBox.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
         <Text text="Packet Statistics" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
         <TableView fx:id="packetStatisticsTable" prefHeight="200">
             <columns>
-                <TableColumn fx:id="statisticCol" text="Statistic" />
-                <TableColumn fx:id="valueCol" text="Value" />
+                <TableColumn fx:id="ipCol" text="IP Address" />
+                <TableColumn fx:id="incomingPacketsCol" text="Incoming Packets" />
+                <TableColumn fx:id="outgoingPacketsCol" text="Outgoing Packets" />
             </columns>
         </TableView>
     </VBox>
 
     <!-- Alerts Section -->
-    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="2">
+    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="2" VBox.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
         <Text text="Alerts" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
         <TableView fx:id="alertsTable" prefHeight="200">
             <columns>
-                <TableColumn fx:id="timeCol" text="Time" />
                 <TableColumn fx:id="alertCol" text="Alert" />
+                <TableColumn fx:id="descriptionCol" text="Description" />
             </columns>
         </TableView>
     </VBox>

@@ -3,6 +3,7 @@ package com.ids.ui;
 import com.ids.services.Connection;
 import com.ids.services.ConnectionAnalyzer;
 import com.ids.services.PacketCapture;
+import com.ids.services.PacketStatistic;
 import com.ids.utils.Alert;
 
 import javafx.application.Platform;
@@ -19,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DashboardController {
-
   @FXML
   private TableView<Connection> connectionTable;
   @FXML
@@ -40,25 +40,27 @@ public class DashboardController {
   private TableColumn<Connection, Long> durationCol;
 
   @FXML
-  private TableView<Map.Entry<String, Integer>> packetStatisticsTable;
+  private TableView<PacketStatistic> packetStatisticsTable;
   @FXML
-  private TableColumn<Map.Entry<String, Integer>, String> statisticCol;
+  private TableColumn<PacketStatistic, String> ipCol;
   @FXML
-  private TableColumn<Map.Entry<String, Integer>, Integer> valueCol;
+  private TableColumn<PacketStatistic, Integer> incomingPacketsCol;
+  @FXML
+  private TableColumn<PacketStatistic, Integer> outgoingPacketsCol;
 
   @FXML
   private TableView<Alert> alertsTable;
   @FXML
-  private TableColumn<Alert, String> timeCol;
+  private TableColumn<Alert, String> descriptionCol;
   @FXML
   private TableColumn<Alert, String> alertCol;
 
   private ObservableList<Connection> connectionData = FXCollections.observableArrayList();
-  private ObservableList<Map.Entry<String, Integer>> packetStatisticsData = FXCollections.observableArrayList();
+  private ObservableList<PacketStatistic> packetStatisticsData = FXCollections.observableArrayList();
   private ObservableList<Alert> alertsData = FXCollections.observableArrayList();
 
-  private Map<String, Integer> incomingPacketsCount = new HashMap<>();
-  private Map<String, Integer> outgoingPacketsCount = new HashMap<>();
+  // private Map<String, Integer> incomingPacketsCount = new HashMap<>();
+  // private Map<String, Integer> outgoingPacketsCount = new HashMap<>();
   private ConnectionAnalyzer connectionAnalyzer;
 
   @FXML
@@ -74,24 +76,24 @@ public class DashboardController {
 
     connectionTable.setItems(connectionData);
 
-    statisticCol.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getKey()));
-    valueCol.setCellValueFactory(
-        data -> new javafx.beans.property.SimpleIntegerProperty(data.getValue().getValue()).asObject());
+    ipCol.setCellValueFactory(new PropertyValueFactory<>("ip"));
+    incomingPacketsCol.setCellValueFactory(new PropertyValueFactory<>("incomingPackets"));
+    outgoingPacketsCol.setCellValueFactory(new PropertyValueFactory<>("outgoingPackets"));
 
     packetStatisticsTable.setItems(packetStatisticsData);
 
-    timeCol.setCellValueFactory(new PropertyValueFactory<>("time"));
+    descriptionCol.setCellValueFactory(new PropertyValueFactory<>("time"));
     alertCol.setCellValueFactory(new PropertyValueFactory<>("message"));
 
     alertsTable.setItems(alertsData);
 
     // For testing purposes, add some dummy data
-    addDummyData();
+    // addDummyData();
   }
 
-  public void initializeDashboard(PcapNetworkInterface selectedInterface) {
+  public void initializeDashboard(PcapNetworkInterface selectedInterface, String captureFilter) {
     try {
-      PacketCapture packetCapture = new PacketCapture(selectedInterface);
+      PacketCapture packetCapture = new PacketCapture(selectedInterface, captureFilter);
       connectionAnalyzer = new ConnectionAnalyzer();
 
       packetCapture.startCapture("output.pcap");
@@ -112,14 +114,19 @@ public class DashboardController {
           connectionData.setAll(activeConnections);
         });
 
-        Map<String, Integer> packetStatistics = new HashMap<>();
-        packetStatistics.put("Incoming Packets",
-            incomingPacketsCount.values().stream().mapToInt(Integer::intValue).sum());
-        packetStatistics.put("Outgoing Packets",
-            outgoingPacketsCount.values().stream().mapToInt(Integer::intValue).sum());
+        Map<String, PacketStatistic> packetStatistics = new HashMap<>();
+        connectionAnalyzer.getIncomingPacketsCount().forEach((ip, count) -> {
+          packetStatistics.putIfAbsent(ip, new PacketStatistic(ip, 0, 0));
+          packetStatistics.get(ip).setIncomingPackets(count);
+        });
+
+        connectionAnalyzer.getOutgoingPacketsCount().forEach((ip, count) -> {
+          packetStatistics.putIfAbsent(ip, new PacketStatistic(ip, 0, 0));
+          packetStatistics.get(ip).setOutgoingPackets(count);
+        });
 
         Platform.runLater(() -> {
-          packetStatisticsData.setAll(packetStatistics.entrySet());
+          packetStatisticsData.setAll(packetStatistics.values());
         });
 
         try {
@@ -131,17 +138,20 @@ public class DashboardController {
     }).start();
   }
 
-  private void addDummyData() {
-    connectionData.add(new Connection("192.168.1.1", "192.168.1.2", 12345, 80, "TCP"));
-    connectionData.add(new Connection("192.168.1.3", "192.168.1.4", 12346, 443, "UDP"));
+  // private void addDummyData() {
+  // connectionData.add(new Connection("192.168.1.1", "192.168.1.2", 12345, 80,
+  // "TCP"));
+  // connectionData.add(new Connection("192.168.1.3", "192.168.1.4", 12346, 443,
+  // "UDP"));
 
-    incomingPacketsCount.put("192.168.1.2", 10);
-    incomingPacketsCount.put("192.168.1.4", 20);
+  // incomingPacketsCount.put("192.168.1.2", 10);
+  // incomingPacketsCount.put("192.168.1.4", 20);
 
-    outgoingPacketsCount.put("192.168.1.1", 15);
-    outgoingPacketsCount.put("192.168.1.3", 25);
+  // outgoingPacketsCount.put("192.168.1.1", 15);
+  // outgoingPacketsCount.put("192.168.1.3", 25);
 
-    alertsData.add(new Alert("12:00", "High traffic detected"));
-    alertsData.add(new Alert("12:05", "Potential attack detected"));
-  }
+  // alertsData.add(new Alert("12:00", "High traffic detected"));
+  // alertsData.add(new Alert("12:05", "Potential attack detected"));
+  // }
+
 }

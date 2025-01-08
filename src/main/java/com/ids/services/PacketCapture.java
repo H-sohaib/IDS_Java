@@ -12,6 +12,7 @@ public class PacketCapture {
   private PcapNetworkInterface networkInterface;
   private String captureFilter;
   private List<Packet> capturedPackets;
+  private static final int MAX_PACKETS = 10000; // Limit the number of captured packets
 
   // Constructor
   public PacketCapture(PcapNetworkInterface networkInterface, String captureFilter) {
@@ -27,7 +28,8 @@ public class PacketCapture {
   }
 
   // Start capture
-  public void startCapture(String outputFilePath) throws PcapNativeException, NotOpenException, IOException {
+  public void startCapture(String outputFilePath)
+      throws PcapNativeException, NotOpenException, IOException {
     handle = networkInterface.openLive(
         65536, PcapNetworkInterface.PromiscuousMode.PROMISCUOUS, 10);
 
@@ -38,13 +40,21 @@ public class PacketCapture {
     new Thread(() -> {
       try {
         handle.loop(-1, (Packet packet) -> {
+          if (capturedPackets.size() >= MAX_PACKETS) {
+            capturedPackets.clear(); // Clear the list if it reaches the maximum size
+          }
           capturedPackets.add(packet);
           try {
             dumper.dump(packet, handle.getTimestamp());
           } catch (NotOpenException e) {
             throw new RuntimeException(e);
           }
-          // System.out.println(packet); // Print packet to terminal
+          // Introduce a small delay to throttle packet capture
+          try {
+            Thread.sleep(10);
+          } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+          }
         });
       } catch (InterruptedException | PcapNativeException | NotOpenException e) {
         e.printStackTrace();

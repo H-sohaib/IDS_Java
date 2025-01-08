@@ -17,6 +17,8 @@ public class DashboardApp extends Application {
     Scene scene = new Scene(root, 400, 200);
 
     primaryStage.setScene(scene);
+    primaryStage.setMaximized(true);
+
     primaryStage.show();
   }
 

@@ -72,10 +72,11 @@ public class InterfaceSelectionController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard.fxml"));
         Parent root = loader.load();
         DashboardController controller = loader.getController();
-        controller.initializeDashboard(selectedInterface);
+        controller.initializeDashboard(selectedInterface, "tcp");
 
         Stage stage = (Stage) interfaceComboBox.getScene().getWindow();
         stage.getScene().setRoot(root);
+        stage.setMaximized(true);
 
       } catch (Exception e) {
         e.printStackTrace();
