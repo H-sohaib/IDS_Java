@@ -1,10 +1,14 @@
-package com.ids.services;
+package com.ids.core;
 
 import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.IpV6Packet;
 import org.pcap4j.packet.Packet;
 import org.pcap4j.packet.TcpPacket;
 import org.pcap4j.packet.UdpPacket;
+
+import com.ids.detector.AttackDetectionContext;
+import com.ids.detector.NetworkScanningDetectionStrategy;
+import com.ids.utils.Alert;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,6 +18,12 @@ public class ConnectionAnalyzer {
   private Map<String, Integer> incomingPacketsCount = new ConcurrentHashMap<>();
   private Map<String, Integer> outgoingPacketsCount = new ConcurrentHashMap<>();
   private final Map<String, Connection> activeConnections = new ConcurrentHashMap<>();
+  private AttackDetectionContext attackDetectionContext = new AttackDetectionContext();
+
+  public ConnectionAnalyzer() {
+    attackDetectionContext.addStrategy(new NetworkScanningDetectionStrategy());
+    // Add multiple detection strategies
+  }
 
   // Analyze a captured packet
   public void analyzePacket(Packet packet) {
@@ -36,6 +46,8 @@ public class ConnectionAnalyzer {
     incomingPacketsCount.merge(packetInfo.destinationIp, 1, Integer::sum);
     outgoingPacketsCount.merge(packetInfo.sourceIp, 1, Integer::sum);
 
+    // Analyze the packet for attack detection
+    attackDetectionContext.analyzePacket(packetInfo);
   }
 
   // Get all active connections
@@ -167,6 +179,11 @@ public class ConnectionAnalyzer {
     }
 
     return new PacketInfo(sourceIp, destinationIp, sourcePort, destinationPort, protocol, packetSize);
+  }
+
+  // Generate alerts based on the detection strategies
+  public List<Alert> generateAlerts() {
+    return attackDetectionContext.generateAlerts();
   }
 
 }

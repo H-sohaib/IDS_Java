@@ -1,4 +1,4 @@
-package com.ids.services.core;
+package com.ids.core.core;
 
 //package org.pcap4j.sample;
 

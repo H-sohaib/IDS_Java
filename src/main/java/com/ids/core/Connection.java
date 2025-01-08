@@ -1,4 +1,4 @@
-package com.ids.services;
+package com.ids.core;
 
 public class Connection {
   private final String sourceIp;

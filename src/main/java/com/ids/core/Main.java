@@ -1,10 +1,9 @@
-package com.ids.services;
+package com.ids.core;
 
 import org.pcap4j.core.NotOpenException;
 import org.pcap4j.core.PcapNativeException;
 import org.pcap4j.core.PcapNetworkInterface;
 import org.pcap4j.core.Pcaps;
-import org.pcap4j.util.NifSelector;
 
 import java.io.IOException;
 import java.util.List;

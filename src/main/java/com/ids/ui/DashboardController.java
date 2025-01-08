@@ -1,9 +1,9 @@
 package com.ids.ui;
 
-import com.ids.services.Connection;
-import com.ids.services.ConnectionAnalyzer;
-import com.ids.services.PacketCapture;
-import com.ids.services.PacketStatistic;
+import com.ids.core.Connection;
+import com.ids.core.ConnectionAnalyzer;
+import com.ids.core.PacketCapture;
+import com.ids.core.PacketStatistic;
 import com.ids.utils.Alert;
 
 import javafx.application.Platform;
@@ -15,8 +15,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.pcap4j.core.PcapNetworkInterface;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DashboardController {
@@ -51,9 +53,11 @@ public class DashboardController {
   @FXML
   private TableView<Alert> alertsTable;
   @FXML
-  private TableColumn<Alert, String> descriptionCol;
-  @FXML
   private TableColumn<Alert, String> alertCol;
+  @FXML
+  private TableColumn<Alert, String> timeCol;
+  @FXML
+  private TableColumn<Alert, String> descriptionCol;
 
   private ObservableList<Connection> connectionData = FXCollections.observableArrayList();
   private ObservableList<PacketStatistic> packetStatisticsData = FXCollections.observableArrayList();
@@ -82,8 +86,12 @@ public class DashboardController {
 
     packetStatisticsTable.setItems(packetStatisticsData);
 
-    descriptionCol.setCellValueFactory(new PropertyValueFactory<>("time"));
-    alertCol.setCellValueFactory(new PropertyValueFactory<>("message"));
+    alertCol.setCellValueFactory(new PropertyValueFactory<>("alert"));
+    timeCol.setCellValueFactory(cellData -> {
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+      return new javafx.beans.property.SimpleStringProperty(cellData.getValue().getDateTime().format(formatter));
+    });
+    descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
 
     alertsTable.setItems(alertsData);
 
@@ -127,6 +135,12 @@ public class DashboardController {
 
         Platform.runLater(() -> {
           packetStatisticsData.setAll(packetStatistics.values());
+        });
+
+        // Generate and display alerts
+        List<Alert> newAlerts = connectionAnalyzer.generateAlerts();
+        Platform.runLater(() -> {
+          alertsData.addAll(newAlerts);
         });
 
         try {

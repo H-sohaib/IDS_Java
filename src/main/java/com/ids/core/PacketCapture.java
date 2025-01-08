@@ -1,4 +1,4 @@
-package com.ids.services;
+package com.ids.core;
 
 import org.pcap4j.core.*;
 import org.pcap4j.packet.Packet;

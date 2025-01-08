@@ -45,6 +45,7 @@
         <TableView fx:id="alertsTable" prefHeight="200">
             <columns>
                 <TableColumn fx:id="alertCol" text="Alert" />
+                <TableColumn fx:id="timeCol" text="Time" /> 
                 <TableColumn fx:id="descriptionCol" text="Description" />
             </columns>
         </TableView>

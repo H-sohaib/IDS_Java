@@ -1,19 +1,31 @@
 package com.ids.utils;
 
+import java.time.LocalDateTime;
+
 public class Alert {
-  private final String time;
-  private final String message;
+  private final String alert;
+  private final String description;
+  private LocalDateTime dateTime;
 
-  public Alert(String time, String message) {
-    this.time = time;
-    this.message = message;
+  public Alert(String alert, String description) {
+    this.alert = alert;
+    this.description = description;
+    this.dateTime = LocalDateTime.now();
   }
 
-  public String getTime() {
-    return time;
+  public String getAlert() {
+    return alert;
   }
 
-  public String getMessage() {
-    return message;
+  public String getDescription() {
+    return description;
+  }
+
+  public LocalDateTime getDateTime() {
+    return dateTime;
+  }
+
+  public void setDateTime(LocalDateTime dateTime) {
+    this.dateTime = dateTime;
   }
 }

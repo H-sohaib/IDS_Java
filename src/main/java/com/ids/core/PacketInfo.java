@@ -1,7 +1,7 @@
-package com.ids.services;
+package com.ids.core;
 
 // Inner class to hold packet information
-class PacketInfo {
+public class PacketInfo {
   String sourceIp;
   String destinationIp;
   int sourcePort;
@@ -17,5 +17,29 @@ class PacketInfo {
     this.destinationPort = destinationPort;
     this.protocol = protocol;
     this.packetSize = packetSize;
+  }
+
+  public String getSourceIp() {
+    return sourceIp;
+  }
+
+  public String getDestinationIp() {
+    return destinationIp;
+  }
+
+  public int getSourcePort() {
+    return sourcePort;
+  }
+
+  public int getDestinationPort() {
+    return destinationPort;
+  }
+
+  public String getProtocol() {
+    return protocol;
+  }
+
+  public long getPacketSize() {
+    return packetSize;
   }
 }
