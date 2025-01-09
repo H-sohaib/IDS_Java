@@ -1,7 +1,10 @@
 package com.ids.core;
 
 import org.pcap4j.core.*;
+import org.pcap4j.packet.IcmpV4CommonPacket;
 import org.pcap4j.packet.Packet;
+import org.pcap4j.packet.TcpPacket;
+import org.pcap4j.packet.UdpPacket;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,18 +25,22 @@ public class PacketCapture {
   }
 
   public PacketCapture(PcapNetworkInterface networkInterface) {
-    this.networkInterface = networkInterface;
-    this.captureFilter = "";
-    this.capturedPackets = new CopyOnWriteArrayList<>();
+    this(networkInterface, "");
   }
 
   // Start capture
   public void startCapture(String outputFilePath)
       throws PcapNativeException, NotOpenException, IOException {
-    handle = networkInterface.openLive(
-        65536, PcapNetworkInterface.PromiscuousMode.PROMISCUOUS, 10);
+    PcapHandle.Builder phb = new PcapHandle.Builder(networkInterface.getName())
+        .snaplen(65536)
+        .promiscuousMode(PcapNetworkInterface.PromiscuousMode.PROMISCUOUS)
+        .timeoutMillis(10);
 
-    handle.setFilter(captureFilter, BpfProgram.BpfCompileMode.OPTIMIZE); // Empty filter to capture all traffic
+    if (true) {
+      phb.timestampPrecision(PcapHandle.TimestampPrecision.NANO);
+    }
+
+    handle = phb.build();
 
     PcapDumper dumper = handle.dumpOpen(outputFilePath);
 
@@ -49,12 +56,23 @@ public class PacketCapture {
           } catch (NotOpenException e) {
             throw new RuntimeException(e);
           }
+          // // Log packet information
+          // System.out.println("Captured packet: " + packet);
+          // if (packet.contains(TcpPacket.class)) {
+          // System.out.println("Captured TCP packet: " + packet);
+          // } else if (packet.contains(UdpPacket.class)) {
+          // System.out.println("Captured UDP packet: " + packet);
+          // } else if (packet.contains(IcmpV4CommonPacket.class)) {
+          // System.out.println("Captured ICMP packet: " + packet);
+          // } else {
+          // System.out.println("Captured other packet: " + packet);
+          // }
           // Introduce a small delay to throttle packet capture
-          try {
-            Thread.sleep(10);
-          } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-          }
+          // try {
+          // Thread.sleep(10);
+          // } catch (InterruptedException e) {
+          // Thread.currentThread().interrupt();
+          // }
         });
       } catch (InterruptedException | PcapNativeException | NotOpenException e) {
         e.printStackTrace();

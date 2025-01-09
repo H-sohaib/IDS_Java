@@ -7,12 +7,18 @@ import com.ids.core.PacketStatistic;
 import com.ids.utils.Alert;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Text;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 import org.pcap4j.core.PcapNetworkInterface;
 
 import java.time.format.DateTimeFormatter;
@@ -20,8 +26,23 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class DashboardController {
+  @FXML
+  private Text trafficVolumeText;
+  @FXML
+  private Text alertCountText;
+  // @FXML
+  // private Text bandwidthText;
+
+  private StringProperty trafficVolume = new SimpleStringProperty("0 KB");
+  private StringProperty alertCount = new SimpleStringProperty("0");
+  // private StringProperty bandwidth = new SimpleStringProperty("0 bps");
+
+  private long previousTraffic = 0;
+  private long previousTime = System.currentTimeMillis();
+
   @FXML
   private TableView<Connection> connectionTable;
   @FXML
@@ -95,6 +116,9 @@ public class DashboardController {
 
     alertsTable.setItems(alertsData);
 
+    trafficVolumeText.textProperty().bind(trafficVolume);
+    alertCountText.textProperty().bind(alertCount);
+    // bandwidthText.textProperty().bind(bandwidth);
     // For testing purposes, add some dummy data
     // addDummyData();
   }
@@ -122,6 +146,22 @@ public class DashboardController {
           connectionData.setAll(activeConnections);
         });
 
+        long currentTraffic = activeConnections.stream()
+            .mapToLong(Connection::getByteCount)
+            .sum();
+        long currentTime = System.currentTimeMillis();
+        // Update traffic volume
+        Platform.runLater(() -> trafficVolume.set(formatDataSize(currentTraffic)));
+        // // Update bandwidth (bits per second)
+        // long deltaTime = currentTime - previousTime;
+        // if (deltaTime > 0) {
+        // long bandwidthBps = (currentTraffic - previousTraffic) * 8 * 1000 /
+        // deltaTime;
+        // Platform.runLater(() -> bandwidth.set(bandwidthBps + " bps"));
+        // }
+        previousTraffic = currentTraffic;
+        previousTime = currentTime;
+
         Map<String, PacketStatistic> packetStatistics = new HashMap<>();
         connectionAnalyzer.getIncomingPacketsCount().forEach((ip, count) -> {
           packetStatistics.putIfAbsent(ip, new PacketStatistic(ip, 0, 0));
@@ -140,7 +180,18 @@ public class DashboardController {
         // Generate and display alerts
         List<Alert> newAlerts = connectionAnalyzer.generateAlerts();
         Platform.runLater(() -> {
-          alertsData.addAll(newAlerts);
+          for (Alert newAlert : newAlerts) {
+            Optional<Alert> existingAlert = alertsData.stream()
+                .filter(alert -> alert.getAlert().equals(newAlert.getAlert()) &&
+                    alert.getDescription().equals(newAlert.getDescription()))
+                .findFirst();
+            if (existingAlert.isPresent()) {
+              existingAlert.get().setDateTime(newAlert.getDateTime());
+            } else {
+              alertsData.add(newAlert);
+            }
+          }
+          alertCount.set(String.valueOf(alertsData.size()));
         });
 
         try {
@@ -152,6 +203,13 @@ public class DashboardController {
     }).start();
   }
 
+  private String formatDataSize(long bytes) {
+    if (bytes < 1024)
+      return bytes + " B";
+    int exp = (int) (Math.log(bytes) / Math.log(1024));
+    char prefix = "KMGTPE".charAt(exp - 1);
+    return String.format("%.1f %sB", bytes / Math.pow(1024, exp), prefix);
+  }
   // private void addDummyData() {
   // connectionData.add(new Connection("192.168.1.1", "192.168.1.2", 12345, 80,
   // "TCP"));

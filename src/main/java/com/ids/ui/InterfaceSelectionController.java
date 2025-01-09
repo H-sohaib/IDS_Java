@@ -72,7 +72,7 @@ public class InterfaceSelectionController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/dashboard.fxml"));
         Parent root = loader.load();
         DashboardController controller = loader.getController();
-        controller.initializeDashboard(selectedInterface, "tcp");
+        controller.initializeDashboard(selectedInterface, "tcp or icmp");
 
         Stage stage = (Stage) interfaceComboBox.getScene().getWindow();
         stage.getScene().setRoot(root);

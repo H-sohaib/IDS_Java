@@ -1,53 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 <?import javafx.geometry.Insets?>
 
 <GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.ids.ui.DashboardController">
-    <padding>
-        <Insets top="10" right="10" bottom="10" left="10"/>
-    </padding>
-    <!-- Active Connections Section -->
-    <VBox GridPane.rowIndex="0" GridPane.columnIndex="0" VBox.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
-        <Text text="Active Connections" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-        <TableView fx:id="connectionTable" prefHeight="200">
-            <columns>
-                <TableColumn fx:id="sourceIpCol" text="Source IP"/>
-                <TableColumn fx:id="destinationIpCol" text="Destination IP"/>
-                <TableColumn fx:id="sourcePortCol" text="Source Port"/>
-                <TableColumn fx:id="destinationPortCol" text="Destination Port"/>
-                <TableColumn fx:id="protocolCol" text="Protocol"/>
-                <TableColumn fx:id="packetCountCol" text="Packets"/>
-                <TableColumn fx:id="byteCountCol" text="Bytes"/>
-                <TableColumn fx:id="durationCol" text="Duration (ms)"/>
-            </columns>
-        </TableView>
-    </VBox>
+  <padding>
+    <Insets top="10" right="10" bottom="10" left="10"/>
+  </padding>
 
-    <!-- Packet Statistics Section -->
-    <VBox GridPane.rowIndex="0" GridPane.columnIndex="1" VBox.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
-        <Text text="Packet Statistics" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-        <TableView fx:id="packetStatisticsTable" prefHeight="200">
-            <columns>
-                <TableColumn fx:id="ipCol" text="IP Address" />
-                <TableColumn fx:id="incomingPacketsCol" text="Incoming Packets" />
-                <TableColumn fx:id="outgoingPacketsCol" text="Outgoing Packets" />
-            </columns>
-        </TableView>
-    </VBox>
+  <!-- Metrics Section -->
+  <!-- Metrics Section -->
+  <VBox GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS">
+    <children>
+      <Text text="Dashboard Metrics" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+      <GridPane hgap="10" vgap="10">
+        <columnConstraints>
+          <ColumnConstraints percentWidth="30" />
+          <ColumnConstraints percentWidth="20" />
+          <ColumnConstraints percentWidth="30" />
+          <ColumnConstraints percentWidth="20" />
+          <ColumnConstraints percentWidth="30" />
+          <ColumnConstraints percentWidth="20" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="30" />
+        </rowConstraints>
+        <children>
+          <Text text="Traffic Volume:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+          <Text fx:id="trafficVolumeText" GridPane.rowIndex="0" GridPane.columnIndex="1" text="Loading..." />
 
-    <!-- Alerts Section -->
-    <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.columnSpan="2" VBox.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
-        <Text text="Alerts" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
-        <TableView fx:id="alertsTable" prefHeight="200">
-            <columns>
-                <TableColumn fx:id="alertCol" text="Alert" />
-                <TableColumn fx:id="timeCol" text="Time" /> 
-                <TableColumn fx:id="descriptionCol" text="Description" />
-            </columns>
-        </TableView>
-    </VBox>
+          <Text text="Alert Count:" GridPane.rowIndex="0" GridPane.columnIndex="2" />
+          <Text fx:id="alertCountText" GridPane.rowIndex="0" GridPane.columnIndex="3" text="Loading..." />
+
+          <!-- <Text text="Bandwidth:" GridPane.rowIndex="0" GridPane.columnIndex="4" />
+          <Text fx:id="bandwidthText" GridPane.rowIndex="0" GridPane.columnIndex="5" text="Loading..." />
+         -->
+        </children>
+      </GridPane>
+    </children>
+  </VBox>
+
+
+
+  <!-- Active Connections Section -->
+  <VBox GridPane.rowIndex="1" GridPane.columnIndex="0" VBox.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
+    <children>
+      <Text text="Active Connections" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+      <TableView fx:id="connectionTable" prefHeight="200">
+        <columns>
+          <TableColumn fx:id="sourceIpCol" text="Source IP"/>
+          <TableColumn fx:id="destinationIpCol" text="Destination IP"/>
+          <TableColumn fx:id="sourcePortCol" text="Source Port"/>
+          <TableColumn fx:id="destinationPortCol" text="Destination Port"/>
+          <TableColumn fx:id="protocolCol" text="Protocol"/>
+          <TableColumn fx:id="packetCountCol" text="Packets"/>
+          <TableColumn fx:id="byteCountCol" text="Bytes"/>
+          <TableColumn fx:id="durationCol" text="Duration (ms)"/>
+        </columns>
+      </TableView>
+    </children>
+  </VBox>
+
+  <!-- Packet Statistics Section -->
+  <VBox GridPane.rowIndex="1" GridPane.columnIndex="1" VBox.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
+    <children>
+      <Text text="Packet Statistics" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+      <TableView fx:id="packetStatisticsTable" prefHeight="200">
+        <columns>
+          <TableColumn fx:id="ipCol" text="IP Address" />
+          <TableColumn fx:id="incomingPacketsCol" text="Incoming Packets" />
+          <TableColumn fx:id="outgoingPacketsCol" text="Outgoing Packets" />
+        </columns>
+      </TableView>
+    </children>
+  </VBox>
+
+  <!-- Alerts Section -->
+  <VBox GridPane.rowIndex="2" GridPane.columnIndex="0" GridPane.columnSpan="2" VBox.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
+    <children>
+      <Text text="Alerts" style="-fx-font-size: 16px; -fx-font-weight: bold;" />
+      <TableView fx:id="alertsTable">
+        <columns>
+          <TableColumn fx:id="alertCol" text="Alert" />
+          <TableColumn fx:id="timeCol" text="Time" />
+          <TableColumn fx:id="descriptionCol" text="Description" />
+        </columns>
+      </TableView>
+    </children>
+  </VBox>
 </GridPane>

@@ -1,12 +1,10 @@
 package com.ids.core;
 
-import org.pcap4j.packet.IpV4Packet;
-import org.pcap4j.packet.IpV6Packet;
 import org.pcap4j.packet.Packet;
-import org.pcap4j.packet.TcpPacket;
-import org.pcap4j.packet.UdpPacket;
 
 import com.ids.detector.AttackDetectionContext;
+import com.ids.detector.BruteForceDetectionStrategy;
+import com.ids.detector.DosDetectionStrategy;
 import com.ids.detector.NetworkScanningDetectionStrategy;
 import com.ids.utils.Alert;
 
@@ -22,6 +20,8 @@ public class ConnectionAnalyzer {
 
   public ConnectionAnalyzer() {
     attackDetectionContext.addStrategy(new NetworkScanningDetectionStrategy());
+    attackDetectionContext.addStrategy(new DosDetectionStrategy());
+    // attackDetectionContext.addStrategy(new BruteForceDetectionStrategy());
     // Add multiple detection strategies
   }
 
@@ -29,7 +29,7 @@ public class ConnectionAnalyzer {
   public void analyzePacket(Packet packet) {
 
     // Extract packet information
-    PacketInfo packetInfo = extractPacketInfo(packet);
+    PacketInfo packetInfo = new PacketInfo(packet);
 
     // Create a unique key for the connection
     String connectionKey = String.format("%s:%d-%s:%d", packetInfo.sourceIp, packetInfo.sourcePort,
@@ -129,56 +129,6 @@ public class ConnectionAnalyzer {
         }
       }
     }).start();
-  }
-
-  // Extract information from a packet
-  private PacketInfo extractPacketInfo(Packet packet) {
-    String sourceIp = "";
-    String destinationIp = "";
-    int sourcePort = 0;
-    int destinationPort = 0;
-    String protocol = "";
-    long packetSize = packet.length();
-
-    if (packet.contains(IpV4Packet.class)) {
-      IpV4Packet ipV4Packet = packet.get(IpV4Packet.class);
-      IpV4Packet.IpV4Header ipV4Header = ipV4Packet.getHeader();
-      sourceIp = ipV4Header.getSrcAddr().getHostAddress();
-      destinationIp = ipV4Header.getDstAddr().getHostAddress();
-      protocol = ipV4Header.getProtocol().name();
-
-      if (ipV4Packet.contains(TcpPacket.class)) {
-        TcpPacket tcpPacket = ipV4Packet.get(TcpPacket.class);
-        TcpPacket.TcpHeader tcpHeader = tcpPacket.getHeader();
-        sourcePort = tcpHeader.getSrcPort().valueAsInt();
-        destinationPort = tcpHeader.getDstPort().valueAsInt();
-      } else if (ipV4Packet.contains(UdpPacket.class)) {
-        UdpPacket udpPacket = ipV4Packet.get(UdpPacket.class);
-        UdpPacket.UdpHeader udpHeader = udpPacket.getHeader();
-        sourcePort = udpHeader.getSrcPort().valueAsInt();
-        destinationPort = udpHeader.getDstPort().valueAsInt();
-      }
-    } else if (packet.contains(IpV6Packet.class)) {
-      IpV6Packet ipV6Packet = packet.get(IpV6Packet.class);
-      IpV6Packet.IpV6Header ipV6Header = ipV6Packet.getHeader();
-      sourceIp = ipV6Header.getSrcAddr().getHostAddress();
-      destinationIp = ipV6Header.getDstAddr().getHostAddress();
-      protocol = ipV6Header.getNextHeader().name();
-
-      if (ipV6Packet.contains(TcpPacket.class)) {
-        TcpPacket tcpPacket = ipV6Packet.get(TcpPacket.class);
-        TcpPacket.TcpHeader tcpHeader = tcpPacket.getHeader();
-        sourcePort = tcpHeader.getSrcPort().valueAsInt();
-        destinationPort = tcpHeader.getDstPort().valueAsInt();
-      } else if (ipV6Packet.contains(UdpPacket.class)) {
-        UdpPacket udpPacket = ipV6Packet.get(UdpPacket.class);
-        UdpPacket.UdpHeader udpHeader = udpPacket.getHeader();
-        sourcePort = udpHeader.getSrcPort().valueAsInt();
-        destinationPort = udpHeader.getDstPort().valueAsInt();
-      }
-    }
-
-    return new PacketInfo(sourceIp, destinationIp, sourcePort, destinationPort, protocol, packetSize);
   }
 
   // Generate alerts based on the detection strategies

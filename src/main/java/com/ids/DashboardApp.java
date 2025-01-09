@@ -1,4 +1,10 @@
-package com.ids.ui;
+package com.ids;
+
+import java.util.logging.Logger;
+
+import com.ids.core.Main;
+import com.ids.utils.LoggerUtil;
+import com.ids.utils.LoggingConfig;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +29,13 @@ public class DashboardApp extends Application {
   }
 
   public static void main(String[] args) {
+    LoggingConfig.configureLogger();
+    Logger logger = LoggerUtil.getLogger(DashboardApp.class);
+
+    logger.info("IDS starting...");
+
     launch(args);
+
+    logger.info("IDS shutting down");
   }
 }
